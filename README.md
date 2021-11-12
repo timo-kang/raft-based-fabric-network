@@ -11,3 +11,6 @@ Ordering Service : Raft
 * add / reduce endorsing peer nodes
 * create a new channel
 * backup & restore ledger and network
+
+### Download docker images and binaries
+`curl -sSL https://bit.ly/2ysbOFE | bash -s`
