@@ -162,14 +162,14 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variables
       - CORE_PEER_ID=peer0.org1.example.com
-      - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:7051
-      - CORE_PEER_CHAINCODEADDRESS=peer0.org1.example.com:7052
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7052
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:7051
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:7051
+      - CORE_PEER_ADDRESS=peer0.org1.example.com:6051
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:6051
+      - CORE_PEER_CHAINCODEADDRESS=peer0.org1.example.com:6052
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:6052
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer0.org1.example.com:6051
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer0.org1.example.com:6051
       - CORE_PEER_LOCALMSPID=Org1MSP
-      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:17051
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:16051
     volumes:
         - ${DOCKER_SOCK}:/host/var/run/docker.sock
         - ../organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/msp:/etc/hyperledger/fabric/msp
@@ -178,8 +178,8 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:
-      - 7051:7051
-      - 17051:17051
+      - 6051:6051
+      - 16051:16051
     networks:
       - test
 
@@ -201,14 +201,14 @@ services:
       - CORE_PEER_TLS_ROOTCERT_FILE=/etc/hyperledger/fabric/tls/ca.crt
       # Peer specific variables
       - CORE_PEER_ID=peer1.org1.example.com
-      - CORE_PEER_ADDRESS=peer1.org1.example.com:7053
-      - CORE_PEER_LISTENADDRESS=0.0.0.0:7053
-      - CORE_PEER_CHAINCODEADDRESS=peer1.org1.example.com:7054
-      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:7054
-      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org1.example.com:7053
-      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:7053
+      - CORE_PEER_ADDRESS=peer1.org1.example.com:6053
+      - CORE_PEER_LISTENADDRESS=0.0.0.0:6053
+      - CORE_PEER_CHAINCODEADDRESS=peer1.org1.example.com:6054
+      - CORE_PEER_CHAINCODELISTENADDRESS=0.0.0.0:6054
+      - CORE_PEER_GOSSIP_BOOTSTRAP=peer1.org1.example.com:6053
+      - CORE_PEER_GOSSIP_EXTERNALENDPOINT=peer1.org1.example.com:6053
       - CORE_PEER_LOCALMSPID=Org1MSP
-      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:17052
+      - CORE_OPERATIONS_LISTENADDRESS=0.0.0.0:16052
     volumes:
         - ${DOCKER_SOCK}:/host/var/run/docker.sock
         - ../organizations/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/msp:/etc/hyperledger/fabric/msp
@@ -217,8 +217,8 @@ services:
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
     command: peer node start
     ports:
-      - 7053:7053
-      - 17052:17052
+      - 6053:6053
+      - 16052:16052
     networks:
       - test
 
