@@ -13,7 +13,7 @@ Ordering Service : Raft
 * backup & restore ledger and network
 
 ### Download docker images and binaries
-`curl -sSL https://bit.ly/2ysbOFE | bash -s`
+`curl -sSL https://bit.ly/2ysbOFE | bash -d -b --`
 
 * output
 ```
