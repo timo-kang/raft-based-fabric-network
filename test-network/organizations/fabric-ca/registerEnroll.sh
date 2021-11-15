@@ -70,7 +70,7 @@ function createOrg1() {
   cp "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/signcerts/"* "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/server.crt"
   cp "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/keystore/"* "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/server.key"
 
-  # tls관련 priv key 복사하는 부분은 아직 확인되지 않아서 반영하지 않음.
+  # peer의 tlscerts는 공통으로 사용됨.
   mkdir -p "${PWD}/organizations/peerOrganizations/org1.example.com/msp/tlscacerts"
   cp "${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/tlscacerts/"* "${PWD}/organizations/peerOrganizations/org1.example.com/msp/tlscacerts/ca.crt"
 
@@ -93,7 +93,6 @@ function createOrg1() {
   { set +x; } 2>/dev/null
 
   cp "${PWD}/organizations/peerOrganizations/org1.example.com/msp/config.yaml" "${PWD}/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/config.yaml"
-  # 여기까지. 
   # TODO Peer마다의 User를 새로 생성해야 하는 것인지?
 }
 
