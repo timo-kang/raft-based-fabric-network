@@ -19,7 +19,7 @@ createAnchorPeerUpdate() {
 
   if [ $ORG -eq 1 ]; then
     HOST="peer0.org1.example.com"
-    PORT=7051
+    PORT=6051
   elif [ $ORG -eq 2 ]; then
     HOST="peer0.org2.example.com"
     PORT=9051
@@ -42,7 +42,7 @@ createAnchorPeerUpdate() {
 }
 
 updateAnchorPeer() {
-  peer channel update -o orderer.example.com:7050 --ordererTLSHostnameOverride orderer.example.com -c $CHANNEL_NAME -f ${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile "$ORDERER_CA" >&log.txt
+  peer channel update -o orderer.example.com:7150 --ordererTLSHostnameOverride orderer.example.com -c $CHANNEL_NAME -f ${CORE_PEER_LOCALMSPID}anchors.tx --tls --cafile "$ORDERER_CA" >&log.txt
   res=$?
   cat log.txt
   verifyResult $res "Anchor peer update failed"

@@ -14,6 +14,11 @@ Ordering Service : Raft
 
 ### Download docker images and binaries
 `curl -sSL https://bit.ly/2ysbOFE | bash -d -b --`
+```
+  // export PATH environment variable to use fabric commands
+  export PATH=$PWD/bin:$PATH
+```
+
 
 * output
 ```

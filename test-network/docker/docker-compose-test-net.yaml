@@ -27,7 +27,7 @@ services:
     environment:
       - FABRIC_LOGGING_SPEC=INFO
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
-      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_LISTENPORT=7150
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       # enabled TLS
@@ -55,7 +55,7 @@ services:
         - ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/:/var/hyperledger/orderer/tls
         - orderer.example.com:/var/hyperledger/production/orderer
     ports:
-      - 7050:7050
+      - 7150:7150
       - 8443:8443
       - 9443:9443
     networks:
@@ -68,7 +68,7 @@ services:
     environment:
       - FABRIC_LOGGING_SPEC=INFO
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
-      - ORDERER_GENERAL_LISTENPORT=7051
+      - ORDERER_GENERAL_LISTENPORT=7151
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       # enabled TLS
@@ -96,7 +96,7 @@ services:
         - ../organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/:/var/hyperledger/orderer/tls
         - orderer2.example.com:/var/hyperledger/production/orderer
     ports:
-      - 7051:7051
+      - 7151:7151
       - 8444:8444
       - 9444:9444
     networks:
@@ -110,7 +110,7 @@ services:
     environment:
       - FABRIC_LOGGING_SPEC=INFO
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
-      - ORDERER_GENERAL_LISTENPORT=7052
+      - ORDERER_GENERAL_LISTENPORT=7152
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
       - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
       # enabled TLS
@@ -138,7 +138,7 @@ services:
         - ../organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/:/var/hyperledger/orderer/tls
         - orderer3.example.com:/var/hyperledger/production/orderer
     ports:
-      - 7052:7052
+      - 7152:7152
       - 8445:8445
       - 9445:9445
     networks:
