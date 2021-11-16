@@ -43,10 +43,10 @@ Organizations:
 
         OrdererEndpoints:
             - orderer.example.com:7150
-            - orderer2.example.com:7151
-            - orderer3.example.com:7152
-            - orderer4.example.com:7153
-            - orderer5.example.com:7154
+            - orderer2.example.com:7150
+            - orderer3.example.com:7150
+            # - orderer4.example.com:7150
+            # - orderer5.example.com:7150
 
     - &Org1
         # DefaultOrg defines the organization which is used in the sampleconfig
@@ -220,14 +220,14 @@ Orderer: &OrdererDefaults
           Port: 7150
           ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
           ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-        # - Host: orderer2.example.com
-        #   Port: 7151
-        #   ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
-        #   ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
-        # - Host: orderer3.example.com
-        #   Port: 7152
-        #   ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
-        #   ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+        - Host: orderer2.example.com
+          Port: 7150
+          ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+          ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+        - Host: orderer3.example.com
+          Port: 7150
+          ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+          ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
         # - Host: orderer4.example.com
         #   Port: 7153
         #   ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
@@ -319,7 +319,6 @@ Channel: &ChannelDefaults
 #
 ################################################################################
 Profiles:
-    # TODO
     TwoOrgsApplicationGenesis:
         <<: *ChannelDefaults
         Orderer:
@@ -333,60 +332,101 @@ Profiles:
                 - *Org1
                 - *Org2
             Capabilities: *ApplicationCapabilities
-    # # SampleDevModeEtcdRaft defines a configuration that differs from the
-    # # SampleDevModeSolo one only in that it uses the etcd/raft-based orderer.
-    # SampleDevModeEtcdRaft:
-    #     <<: *ChannelDefaults
-    #     Orderer:
-    #         <<: *OrdererDefaults
-    #         OrdererType: etcdraft
-    #         Organizations:
-    #             - <<: *OrdererOrg
-    #               Policies:
-    #                   <<: *SampleOrgPolicies
-    #                   Admins:
-    #                       Type: Signature
-    #                       Rule: "OR('OrdererOrg.member')"
-    #     Application:
-    #         <<: *ApplicationDefaults
-    #         Organizations:
-    #             - <<: *OrdererOrg
-    #               Policies:
-    #                   <<: *SampleOrgPolicies
-    #                   Admins:
-    #                       Type: Signature
-    #                       Rule: "OR('OrdererOrg.member')"
-    #     Consortiums:
-    #         SampleConsortium:
-    #             Organizations:
-    #                 - <<: *OrdererOrg
-    #                   Policies:
-    #                       <<: *SampleOrgPolicies
-    #                       Admins:
-    #                           Type: Signature
-    #                           Rule: "OR('OrdererOrg.member')"
+    TwoOrgsOrdererGenesis:
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                    - *Org1
+                    - *Org2
+    TwoOrgsChannel:
+        Consortium: SampleConsortium
+        <<: *ChannelDefaults
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+                - *Org1
+                - *Org2
+            Capabilities:
+                <<: *ApplicationCapabilities
 
-    # # SampleAppChannelEtcdRaft defines an application channel configuration 
-    # # that uses the etcd/raft-based orderer.
-    # SampleAppChannelEtcdRaft:
-    #     <<: *ChannelDefaults
-    #     Orderer:
-    #         <<: *OrdererDefaults
-    #         OrdererType: etcdraft
-    #         Organizations:
-    #             - <<: *OrdererOrg
-    #               Policies:
-    #                   <<: *SampleOrgPolicies
-    #                   Admins:
-    #                       Type: Signature
-    #                       Rule: "OR('OrdererOrg.member')"
-    #     Application:
-    #         <<: *ApplicationDefaults
-    #         Organizations:
-    #             - <<: *OrdererOrg
-    #               Policies:
-    #                   <<: *SampleOrgPolicies
-    #                   Admins:
-    #                       Type: Signature
-    #                       Rule: "OR('OrdererOrg.member')"
+    SampleDevModeKafka:
+        <<: *ChannelDefaults
+        Capabilities:
+            <<: *ChannelCapabilities
+        Orderer:
+            <<: *OrdererDefaults
+            OrdererType: kafka
+            Kafka:
+                Brokers:
+                - kafka.example.com:9092
 
+            Organizations:
+            - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+            - <<: *OrdererOrg
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                - *Org1
+                - *Org2
+
+    SampleMultiNodeEtcdRaft:
+        <<: *ChannelDefaults
+        Capabilities:
+            <<: *ChannelCapabilities
+        Orderer:
+            <<: *OrdererDefaults
+            OrdererType: etcdraft
+            EtcdRaft:
+                Consenters:
+                - Host: orderer.example.com
+                  Port: 7150
+                  ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+                  ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+                - Host: orderer2.example.com
+                  Port: 7150
+                  ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+                  ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+                - Host: orderer3.example.com
+                  Port: 7150
+                  ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+                  ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+                # - Host: orderer4.example.com
+                #   Port: 7150
+                #   ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
+                #   ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
+                # - Host: orderer5.example.com
+                #   Port: 7150
+                #   ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
+                #   ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
+            Addresses:
+                - orderer.example.com:7150
+                - orderer2.example.com:7150
+                - orderer3.example.com:7150
+                # - orderer4.example.com:7150
+                # - orderer5.example.com:7150
+
+            Organizations:
+            - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+            - <<: *OrdererOrg
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                - *Org1
+                - *Org2
