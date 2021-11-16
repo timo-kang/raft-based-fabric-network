@@ -220,22 +220,22 @@ Orderer: &OrdererDefaults
           Port: 7150
           ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
           ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-        - Host: orderer2.example.com
-          Port: 7151
-          ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-          ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-        - Host: orderer3.example.com
-          Port: 7152
-          ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-          ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-        - Host: orderer4.example.com
-          Port: 7153
-          ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-          ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-        - Host: orderer5.example.com
-          Port: 7154
-          ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
-          ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+        # - Host: orderer2.example.com
+        #   Port: 7151
+        #   ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+        #   ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/tls/server.crt
+        # - Host: orderer3.example.com
+        #   Port: 7152
+        #   ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+        #   ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/tls/server.crt
+        # - Host: orderer4.example.com
+        #   Port: 7153
+        #   ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
+        #   ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer4.example.com/tls/server.crt
+        # - Host: orderer5.example.com
+        #   Port: 7154
+        #   ClientTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
+        #   ServerTLSCert: ../organizations/ordererOrganizations/example.com/orderers/orderer5.example.com/tls/server.crt
 
     # Batch Timeout: The amount of time to wait before creating a batch
     BatchTimeout: 2s
@@ -333,60 +333,60 @@ Profiles:
                 - *Org1
                 - *Org2
             Capabilities: *ApplicationCapabilities
-    # SampleDevModeEtcdRaft defines a configuration that differs from the
-    # SampleDevModeSolo one only in that it uses the etcd/raft-based orderer.
-    SampleDevModeEtcdRaft:
-        <<: *ChannelDefaults
-        Orderer:
-            <<: *OrdererDefaults
-            OrdererType: etcdraft
-            Organizations:
-                - <<: *SampleOrg
-                  Policies:
-                      <<: *SampleOrgPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('SampleOrg.member')"
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - <<: *SampleOrg
-                  Policies:
-                      <<: *SampleOrgPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('SampleOrg.member')"
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                    - <<: *SampleOrg
-                      Policies:
-                          <<: *SampleOrgPolicies
-                          Admins:
-                              Type: Signature
-                              Rule: "OR('SampleOrg.member')"
+    # # SampleDevModeEtcdRaft defines a configuration that differs from the
+    # # SampleDevModeSolo one only in that it uses the etcd/raft-based orderer.
+    # SampleDevModeEtcdRaft:
+    #     <<: *ChannelDefaults
+    #     Orderer:
+    #         <<: *OrdererDefaults
+    #         OrdererType: etcdraft
+    #         Organizations:
+    #             - <<: *OrdererOrg
+    #               Policies:
+    #                   <<: *SampleOrgPolicies
+    #                   Admins:
+    #                       Type: Signature
+    #                       Rule: "OR('OrdererOrg.member')"
+    #     Application:
+    #         <<: *ApplicationDefaults
+    #         Organizations:
+    #             - <<: *OrdererOrg
+    #               Policies:
+    #                   <<: *SampleOrgPolicies
+    #                   Admins:
+    #                       Type: Signature
+    #                       Rule: "OR('OrdererOrg.member')"
+    #     Consortiums:
+    #         SampleConsortium:
+    #             Organizations:
+    #                 - <<: *OrdererOrg
+    #                   Policies:
+    #                       <<: *SampleOrgPolicies
+    #                       Admins:
+    #                           Type: Signature
+    #                           Rule: "OR('OrdererOrg.member')"
 
-    # SampleAppChannelEtcdRaft defines an application channel configuration 
-    # that uses the etcd/raft-based orderer.
-    SampleAppChannelEtcdRaft:
-        <<: *ChannelDefaults
-        Orderer:
-            <<: *OrdererDefaults
-            OrdererType: etcdraft
-            Organizations:
-                - <<: *SampleOrg
-                  Policies:
-                      <<: *SampleOrgPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('SampleOrg.member')"
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - <<: *SampleOrg
-                  Policies:
-                      <<: *SampleOrgPolicies
-                      Admins:
-                          Type: Signature
-                          Rule: "OR('SampleOrg.member')"
+    # # SampleAppChannelEtcdRaft defines an application channel configuration 
+    # # that uses the etcd/raft-based orderer.
+    # SampleAppChannelEtcdRaft:
+    #     <<: *ChannelDefaults
+    #     Orderer:
+    #         <<: *OrdererDefaults
+    #         OrdererType: etcdraft
+    #         Organizations:
+    #             - <<: *OrdererOrg
+    #               Policies:
+    #                   <<: *SampleOrgPolicies
+    #                   Admins:
+    #                       Type: Signature
+    #                       Rule: "OR('OrdererOrg.member')"
+    #     Application:
+    #         <<: *ApplicationDefaults
+    #         Organizations:
+    #             - <<: *OrdererOrg
+    #               Policies:
+    #                   <<: *SampleOrgPolicies
+    #                   Admins:
+    #                       Type: Signature
+    #                       Rule: "OR('OrdererOrg.member')"
 
