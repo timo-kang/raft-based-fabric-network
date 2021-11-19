@@ -23,37 +23,39 @@ createChannelGenesisBlock() {
 		fatalln "configtxgen tool not found."
 	fi
 	set -x
-	configtxgen -profile TwoOrgsApplicationGenesis -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
+	# for solo
+	# configtxgen -profile TwoOrgsApplicationGenesis -outputBlock ./channel-artifacts/${CHANNEL_NAME}.block -channelID $CHANNEL_NAME
+	# for etcdraft
+	configtxgen -profile SampleMultiNodeEtcdRaft -outputBlock ./channel-artifacts/genesis.block -channelID $CHANNEL_NAME
 	res=$?
 	{ set +x; } 2>/dev/null
   verifyResult $res "Failed to generate channel configuration transaction..."
 }
 
 createChannel() {
-	setGlobals 1
+	setGlobals 0 1
 	# Poll in case the raft leader is not set yet
 	local rc=1
 	local COUNTER=1
-	local PORT=9443
 	while [ $rc -ne 0 -a $COUNTER -lt $MAX_RETRY ] ; do
 		sleep $DELAY
 		set -x
-		# using orderer_admin_listen_addr
-		osnadmin channel join --channelID $CHANNEL_NAME --config-block ./channel-artifacts/${CHANNEL_NAME}.block -o localhost:$(expr $PORT + $COUNTER - 1) --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY" >&log.txt
+		osnadmin channel join --channelID $CHANNEL_NAME --config-block ./channel-artifacts/${CHANNEL_NAME}.block -o localhost:9443 --ca-file "$ORDERER_CA" --client-cert "$ORDERER_ADMIN_TLS_SIGN_CERT" --client-key "$ORDERER_ADMIN_TLS_PRIVATE_KEY" >&log.txt
 		res=$?
 		{ set +x; } 2>/dev/null
 		let rc=$res
 		COUNTER=$(expr $COUNTER + 1)
 	done
 	cat log.txt
-	verifyResult $res "Channel creation failed on trying orderer no.$COUNTER"
+	verifyResult $res "Channel creation failed"
 }
 
 # joinChannel ORG
 joinChannel() {
   FABRIC_CFG_PATH=$PWD/config/
-  ORG=$1
-  setGlobals $ORG
+  ORG=$2
+	PEER=$1
+  setGlobals $PEER $ORG
 	local rc=1
 	local COUNTER=1
 	## Sometimes Join takes time, hence retry
@@ -67,7 +69,7 @@ joinChannel() {
 		COUNTER=$(expr $COUNTER + 1)
 	done
 	cat log.txt
-	verifyResult $res "After $MAX_RETRY attempts, peer$(expr $COUNTER - 1).org${ORG} has failed to join channel '$CHANNEL_NAME' "
+	verifyResult $res "After $MAX_RETRY attempts, peer${PEER}.org${ORG} has failed to join channel '$CHANNEL_NAME' "
 }
 
 setAnchorPeer() {
@@ -75,7 +77,7 @@ setAnchorPeer() {
   docker exec cli ./scripts/setAnchorPeer.sh $ORG $CHANNEL_NAME 
 }
 
-FABRIC_CFG_PATH=${PWD}/configtx
+FABRIC_CFG_PATH=${PWD}/config
 
 ## Create channel genesis block
 infoln "Generating channel genesis block '${CHANNEL_NAME}.block'"
@@ -91,9 +93,10 @@ successln "Channel '$CHANNEL_NAME' created"
 
 ## Join all the peers to the channel
 infoln "Joining org1 peer to the channel..."
-joinChannel 1
+joinChannel 0 1
+joinChannel 1 1
 infoln "Joining org2 peer to the channel..."
-joinChannel 2
+joinChannel 0 2
 
 ## Set the anchor peers for each org in the channel
 infoln "Setting anchor peer for org1..."

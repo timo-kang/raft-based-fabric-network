@@ -340,22 +340,6 @@ Profiles:
                 - *OrdererOrg
             Capabilities:
                 <<: *OrdererCapabilities
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                    - *Org1
-                    - *Org2
-    TwoOrgsChannel:
-        Consortium: SampleConsortium
-        <<: *ChannelDefaults
-        Application:
-            <<: *ApplicationDefaults
-            Organizations:
-                - *Org1
-                - *Org2
-            Capabilities:
-                <<: *ApplicationCapabilities
-
     SampleDevModeKafka:
         <<: *ChannelDefaults
         Capabilities:
@@ -375,12 +359,6 @@ Profiles:
             <<: *ApplicationDefaults
             Organizations:
             - <<: *OrdererOrg
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                - *Org1
-                - *Org2
-
     SampleMultiNodeEtcdRaft:
         <<: *ChannelDefaults
         Capabilities:
@@ -425,8 +403,3 @@ Profiles:
             <<: *ApplicationDefaults
             Organizations:
             - <<: *OrdererOrg
-        Consortiums:
-            SampleConsortium:
-                Organizations:
-                - *Org1
-                - *Org2
