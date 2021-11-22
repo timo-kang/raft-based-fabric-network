@@ -50,7 +50,7 @@ createChannel() {
 	verifyResult $res "Channel creation failed"
 }
 
-# joinChannel ORG
+# joinChannel PEER ORG
 joinChannel() {
   FABRIC_CFG_PATH=$PWD/config/
   ORG=$2
