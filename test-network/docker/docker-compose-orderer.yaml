@@ -42,6 +42,9 @@ services:
       - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
       - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:9443
       - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:8443
+      - ORDERER_FILELEDGER_LOCATION=/var/hyperledger/fabric/data/orderer
+      - ORDERER_CONSENSUS_WALDIR=/var/hyperledger/fabric/data/orderer/etcdraft/wal
+      - ORDERER_CONSENSUS_SNAPDIR=/var/hyperledger/fabric/data/orderer/etcdraft/wal
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
@@ -84,6 +87,9 @@ services:
       - ORDERER_ADMIN_TLS_CLIENTROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
       - ORDERER_ADMIN_LISTENADDRESS=0.0.0.0:9443
       - ORDERER_OPERATIONS_LISTENADDRESS=0.0.0.0:8443
+      - ORDERER_FILELEDGER_LOCATION=/var/hyperledger/fabric/data/orderer
+      - ORDERER_CONSENSUS_WALDIR=/var/hyperledger/fabric/data/orderer/etcdraft/wal
+      - ORDERER_CONSENSUS_SNAPDIR=/var/hyperledger/fabric/data/orderer/etcdraft/wal
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
