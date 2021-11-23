@@ -17,7 +17,8 @@ fetchChannelConfig() {
   OUTPUT=$3
 
   setGlobals 0 $ORG
-  setOrdererGlobals
+  # path is not valid
+  # setOrdererGlobals
 
   infoln "Fetching the most recent configuration block for the channel"
   set -x
