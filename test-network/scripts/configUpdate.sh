@@ -44,7 +44,14 @@ createConfigUpdate() {
   set -x
   configtxlator proto_encode --input "${ORIGINAL}" --type common.Config >original_config.pb
   configtxlator proto_encode --input "${MODIFIED}" --type common.Config >modified_config.pb
+  
+  # returns non-zero if no updates were detected between current and new config
   configtxlator compute_update --channel_id "${CHANNEL}" --original original_config.pb --updated modified_config.pb >config_update.pb
+  if [ $? -ne 0 ]; then
+    echo "Anchor peer has already been set to org${ORG} - no update required."
+    return 1
+  fi
+
   configtxlator proto_decode --input config_update.pb --type common.ConfigUpdate >config_update.json
   echo '{"payload":{"header":{"channel_header":{"channel_id":"'$CHANNEL'", "type":2}},"data":{"config_update":'$(cat config_update.json)'}}}' | jq . >config_update_in_envelope.json
   configtxlator proto_encode --input config_update_in_envelope.json --type common.Envelope >"${OUTPUT}"
