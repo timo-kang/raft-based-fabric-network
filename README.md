@@ -1,4 +1,4 @@
-# test-fabric-network ( HLF v2.3 )
+# test-fabric-network ( HLF v2.3.3 )
 
 ## Objective
 1 Org, 1 CA
