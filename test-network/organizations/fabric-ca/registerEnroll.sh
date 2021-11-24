@@ -224,10 +224,18 @@ function createOrderer() {
 
   # create an MSP config.yaml on each nodes
   cp "${PWD}/organizations/ordererOrganizations/example.com/msp/config.yaml" "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/config.yaml"
+  # copied
   cp "${PWD}/organizations/ordererOrganizations/example.com/msp/config.yaml" "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer2.example.com/msp/config.yaml"
   cp "${PWD}/organizations/ordererOrganizations/example.com/msp/config.yaml" "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer3.example.com/msp/config.yaml"
 
   infoln "Generating the orderer-tls certificates"
+  set -x
+  fabric-ca-client register --caname ca-orderer --id.name orderer --id.secret ordererpw --id.type orderer -u https://orderer:ordererpw@localhost:9054 -M "${PWD}/organizations/fabric-ca/ordererOrg/msp"
+  # copied
+  fabric-ca-client register --caname ca-orderer --id.name orderer2 --id.secret orderer2pw --id.type orderer -u https://orderer2:orderer2pw@localhost:9054 -M "${PWD}/organizations/fabric-ca/ordererOrg/msp"
+  fabric-ca-client register --caname ca-orderer --id.name orderer3 --id.secret orderer3pw --id.type orderer -u https://orderer3:orderer3pw@localhost:9054 -M "${PWD}/organizations/fabric-ca/ordererOrg/msp"
+  { set +x; } 2>/dev/null
+
   set -x
   fabric-ca-client enroll -u https://orderer:ordererpw@localhost:9054 --caname ca-orderer -M "${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls" --enrollment.profile tls --csr.hosts orderer.example.com --csr.hosts localhost --tls.certfiles "${PWD}/organizations/fabric-ca/ordererOrg/tls-cert.pem"
   # copied
