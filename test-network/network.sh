@@ -13,7 +13,7 @@
 # prepending $PWD/bin to PATH to ensure we are picking up the correct binaries
 # this may be commented out to resolve installed version of tools if desired
 export PATH=${PWD}/bin:$PATH
-export FABRIC_CFG_PATH=${PWD}/configtx
+export FABRIC_CFG_PATH=${PWD}/config
 export VERBOSE=false
 
 . scripts/utils.sh
@@ -236,7 +236,7 @@ function networkUp() {
     createOrgs
   fi
 
-  COMPOSE_FILES="-f ${COMPOSE_FILE_BASE}"
+  COMPOSE_FILES="-f ${COMPOSE_FILE_BASE} -f ${COMPOSE_FILE_ORDERER}"
 
   if [ "${DATABASE}" == "couchdb" ]; then
     COMPOSE_FILES="${COMPOSE_FILES} -f ${COMPOSE_FILE_COUCH}"
@@ -279,7 +279,7 @@ function deployCC() {
 # Tear down running network
 function networkDown() {
   # stop org3 containers also in addition to org1 and org2, in case we were running sample to add org3
-  DOCKER_SOCK=$DOCKER_SOCK docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH -f $COMPOSE_FILE_CA down --volumes --remove-orphans
+  DOCKER_SOCK=$DOCKER_SOCK docker-compose -f $COMPOSE_FILE_BASE -f $COMPOSE_FILE_COUCH -f $COMPOSE_FILE_CA -f $COMPOSE_FILE_ORDERER down --volumes --remove-orphans
   docker-compose -f $COMPOSE_FILE_COUCH_ORG3 -f $COMPOSE_FILE_ORG3 down --volumes --remove-orphans
   # Don't remove the generated artifacts -- note, the ledgers are always removed
   if [ "$MODE" != "restart" ]; then
@@ -329,6 +329,8 @@ COMPOSE_FILE_CA=docker/docker-compose-ca.yaml
 COMPOSE_FILE_COUCH_ORG3=addOrg3/docker/docker-compose-couch-org3.yaml
 # use this as the default docker-compose yaml definition for org3
 COMPOSE_FILE_ORG3=addOrg3/docker/docker-compose-org3.yaml
+# use this as the default docker-compose yaml definition for raft-orderer
+COMPOSE_FILE_ORDERER=docker/docker-compose-orderer.yaml
 #
 # chaincode language defaults to "NA"
 CC_SRC_LANGUAGE="NA"

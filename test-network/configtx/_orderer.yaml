@@ -94,6 +94,7 @@ General:
     # system channel is specified. The option can be one of:
     #   "file" - path to a file containing the genesis block or config block of system channel
     #   "none" - allows an orderer to start without a system channel configuration
+    # TODO: set bootstrap method "file" after channel configuration is completed
     BootstrapMethod: none
 
     # Bootstrap file: The file containing the bootstrap block to use when
@@ -103,12 +104,12 @@ General:
     # Generate a genesis block by updating $FABRIC_CFG_PATH/configtx.yaml and
     # using configtxgen command with "-outputBlock" option.
     # Defaults to file "genesisblock" (in $FABRIC_CFG_PATH directory) if not specified.
-    BootstrapFile:
+    BootstrapFile: 
 
     # LocalMSPDir is where to find the private crypto material needed by the
     # orderer. It is set relative here as a default for dev environments but
     # should be changed to the real location in production.
-    LocalMSPDir: $ORDERER_GENERAL_LOCALMSPDIR
+    LocalMSPDir: msp
 
     # LocalMSPID is the identity to register the local MSP material with the MSP
     # manager. IMPORTANT: The local MSP ID of an orderer needs to match the MSP
@@ -370,13 +371,13 @@ Admin:
     # TLS configuration for the admin endpoint
     TLS:
         # TLS enabled
-        Enabled: false
+        Enabled: true
 
         # Certificate is the location of the PEM encoded TLS certificate
-        Certificate:
+        Certificate: tls/server.key
 
         # PrivateKey points to the location of the PEM-encoded key
-        PrivateKey:
+        PrivateKey: tls/server.crt
 
         # Most admin service endpoints require client authentication when TLS
         # is enabled. ClientAuthRequired requires client certificate authentication
@@ -400,7 +401,7 @@ Admin:
 ################################################################################
 ChannelParticipation:
     # Channel participation API is enabled.
-    Enabled: false
+    Enabled: true
 
     # The maximum size of the request body when joining a channel.
     MaxRequestBodySize: 1 MB

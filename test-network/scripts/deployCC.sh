@@ -123,7 +123,7 @@ packageChaincode() {
 # installChaincode PEER ORG
 installChaincode() {
   ORG=$1
-  setGlobals $ORG
+  setGlobals 0 $ORG
   set -x
   peer lifecycle chaincode install ${CC_NAME}.tar.gz >&log.txt
   res=$?
@@ -136,7 +136,7 @@ installChaincode() {
 # queryInstalled PEER ORG
 queryInstalled() {
   ORG=$1
-  setGlobals $ORG
+  setGlobals 0 $ORG
   set -x
   peer lifecycle chaincode queryinstalled >&log.txt
   res=$?
@@ -150,7 +150,7 @@ queryInstalled() {
 # approveForMyOrg VERSION PEER ORG
 approveForMyOrg() {
   ORG=$1
-  setGlobals $ORG
+  setGlobals 0 $ORG
   set -x
   peer lifecycle chaincode approveformyorg -o localhost:7150 --ordererTLSHostnameOverride orderer.example.com --tls --cafile "$ORDERER_CA" --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --package-id ${PACKAGE_ID} --sequence ${CC_SEQUENCE} ${INIT_REQUIRED} ${CC_END_POLICY} ${CC_COLL_CONFIG} >&log.txt
   res=$?
@@ -164,7 +164,7 @@ approveForMyOrg() {
 checkCommitReadiness() {
   ORG=$1
   shift 1
-  setGlobals $ORG
+  setGlobals 0 $ORG
   infoln "Checking the commit readiness of the chaincode definition on peer0.org${ORG} on channel '$CHANNEL_NAME'..."
   local rc=1
   local COUNTER=1
@@ -212,7 +212,7 @@ commitChaincodeDefinition() {
 # queryCommitted ORG
 queryCommitted() {
   ORG=$1
-  setGlobals $ORG
+  setGlobals 0 $ORG
   EXPECTED_RESULT="Version: ${CC_VERSION}, Sequence: ${CC_SEQUENCE}, Endorsement Plugin: escc, Validation Plugin: vscc"
   infoln "Querying chaincode definition on peer0.org${ORG} on channel '$CHANNEL_NAME'..."
   local rc=1
@@ -259,7 +259,7 @@ chaincodeInvokeInit() {
 
 chaincodeQuery() {
   ORG=$1
-  setGlobals $ORG
+  setGlobals 0 $ORG
   infoln "Querying on peer0.org${ORG} on channel '$CHANNEL_NAME'..."
   local rc=1
   local COUNTER=1
