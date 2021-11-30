@@ -203,5 +203,7 @@ services:
       - orderer.example.com
       - orderer2.example.com
       - orderer3.example.com
+      - orderer4.example.com
+      - orderer5.example.com
     networks:
       - test
