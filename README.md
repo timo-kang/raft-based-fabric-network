@@ -9,7 +9,7 @@ Ordering Service : Raft
 ### Features
 * [ ] add / reduce raft nodes on online
 * [ ] add / reduce endorsing peer nodes on online
-* [ * ] create a new channel
+* [ ] create a new channel
 * [ ] backup & restore ledger and network
 
 ### Download docker images and binaries
