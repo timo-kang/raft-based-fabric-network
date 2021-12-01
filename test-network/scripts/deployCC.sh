@@ -197,7 +197,7 @@ checkCommitReadiness() {
 
 # commitChaincodeDefinition VERSION PEER ORG (PEER ORG)...
 commitChaincodeDefinition() {
-  parsePeerConnectionParameters $@
+  parsePeerConnectionParametersWithPairArgs $@
   res=$?
   verifyResult $res "Invoke transaction failed on channel '$CHANNEL_NAME' due to uneven number of peer and org parameters "
 
@@ -209,7 +209,7 @@ commitChaincodeDefinition() {
   res=$?
   { set +x; } 2>/dev/null
   cat log.txt
-  verifyResult $res "Chaincode definition commit failed on peer${PEER}.org${ORG} on channel '$CHANNEL_NAME' failed"
+  verifyResult $res "Chaincode definition commit failed on ${PEER} on channel '$CHANNEL_NAME' failed"
   successln "Chaincode definition committed on channel '$CHANNEL_NAME'"
 }
 
@@ -244,7 +244,7 @@ queryCommitted() {
 }
 
 chaincodeInvokeInit() {
-  parsePeerConnectionParameters $@
+  parsePeerConnectionParametersWithPairArgs $@
   res=$?
   verifyResult $res "Invoke transaction failed on channel '$CHANNEL_NAME' due to uneven number of peer and org parameters "
 
@@ -303,10 +303,8 @@ installChaincode 0 2
 queryInstalled 0 1
 queryInstalled 1 1
 
-## approve the definition for org1
+## approve the definition for org1 (for anchor peer)
 approveForMyOrg 0 1
-# TODO check this function applied for only anchor peers
-approveForMyOrg 1 1
 
 ## check whether the chaincode definition is ready to be committed
 ## expect org1 to have approved and org2 not to
@@ -314,7 +312,7 @@ checkCommitReadiness 0 1 "\"Org1MSP\": true" "\"Org2MSP\": false"
 checkCommitReadiness 1 1 "\"Org1MSP\": true" "\"Org2MSP\": false"
 checkCommitReadiness 0 2 "\"Org1MSP\": true" "\"Org2MSP\": false"
 
-## now approve also for org2
+## now approve also for org2 (for anchor peer)
 approveForMyOrg 0 2
 
 ## check whether the chaincode definition is ready to be committed
@@ -324,7 +322,7 @@ checkCommitReadiness 1 1 "\"Org1MSP\": true" "\"Org2MSP\": true"
 checkCommitReadiness 0 2 "\"Org1MSP\": true" "\"Org2MSP\": true"
 
 ## now that we know for sure both orgs have approved, commit the definition
-commitChaincodeDefinition 1 2
+commitChaincodeDefinition 0 1 0 2
 
 ## query on both orgs to see that the definition committed successfully
 queryCommitted 0 1
@@ -336,7 +334,7 @@ queryCommitted 0 2
 if [ "$CC_INIT_FCN" = "NA" ]; then
   infoln "Chaincode initialization is not required"
 else
-  chaincodeInvokeInit 1 2
+  chaincodeInvokeInit 0 1 1 1 0 2
 fi
 
 exit 0

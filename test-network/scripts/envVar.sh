@@ -14,6 +14,7 @@ export CORE_PEER_TLS_ENABLED=true
 export ORDERER_CA=${PWD}/organizations/ordererOrganizations/example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 # export ORDERER_CA=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 export PEER0_ORG1_CA=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+export PEER1_ORG1_CA=${PWD}/organizations/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt
 export PEER0_ORG2_CA=${PWD}/organizations/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
 export PEER0_ORG3_CA=${PWD}/organizations/peerOrganizations/org3.example.com/peers/peer0.org3.example.com/tls/ca.crt
 export ORDERER_ADMIN_TLS_SIGN_CERT=${PWD}/organizations/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
@@ -109,20 +110,53 @@ parsePeerConnectionParameters() {
     CA=PEER0_ORG$1_CA
     TLSINFO=(--tlsRootCertFiles "${!CA}")
     PEER_CONN_PARMS=("${PEER_CONN_PARMS[@]}" "${TLSINFO[@]}")
-    # parse peer1 on org1 either
-    if [ $1 -eq 1 ]; then
-      setGlobals 1 $1
-      PEER="peer1.org$1"
-      PEERS="$PEERS $PEER"
-      PEER_CONN_PARMS=("${PEER_CONN_PARMS[@]}" --peerAddresses $CORE_PEER_ADDRESS)
-      ## Set path to TLS certificate
-      CA=PEER1_ORG$1_CA
-      TLSINFO=(--tlsRootCertFiles "${!CA}")
-      PEER_CONN_PARMS=("${PEER_CONN_PARMS[@]}" "${TLSINFO[@]}")
-    fi
     # shift by one to get to the next organization
     shift
   done
+  # parse peer1 on org1 either
+  setGlobals 1 1
+  PEER="peer1.org1"
+  if [ -z "$PEERS" ]
+    then
+	PEERS="$PEER"
+    else
+	PEERS="$PEERS $PEER"
+  fi
+  PEER_CONN_PARMS=("${PEER_CONN_PARMS[@]}" --peerAddresses $CORE_PEER_ADDRESS)
+  ## Set path to TLS certificate
+  CA=PEER1_ORG$1_CA
+  TLSINFO=(--tlsRootCertFiles "${!CA}")
+  PEER_CONN_PARMS=("${PEER_CONN_PARMS[@]}" "${TLSINFO[@]}")
+
+}
+# (PEER ORG) ...
+parsePeerConnectionParametersWithPairArgs() {
+  # check for uneven number of peer and org parameters
+  if [ $(($# % 2)) -ne 0 ]; then
+    exit 1
+  fi
+
+  PEER_CONN_PARMS=""
+  PEERS=""
+  while [ "$#" -gt 0 ]; do
+    if [ $1 == 1 -a $2 == 2 ]; then
+      # skip for peer1.org2 
+      break
+    fi
+    setGlobals $1 $2
+    PEER="peer$1.org$2"
+    PEERS="$PEERS $PEER"
+    PEER_CONN_PARMS="$PEER_CONN_PARMS --peerAddresses $CORE_PEER_ADDRESS"
+    if [ -z "$CORE_PEER_TLS_ENABLED" -o "$CORE_PEER_TLS_ENABLED" = "true" ]; then
+      TLSINFO=$(eval echo "--tlsRootCertFiles \$PEER$1_ORG$2_CA")
+      PEER_CONN_PARMS="$PEER_CONN_PARMS $TLSINFO"
+    fi
+    # shift by two to get the next pair of peer/org parameters
+    shift
+    shift
+  done
+  # remove leading space for output
+  PEERS="$(echo -e "$PEERS" | sed -e 's/^[[:space:]]*//')"
 }
 
 verifyResult() {
