@@ -101,13 +101,13 @@ successln "Channel '$CHANNEL_NAME' created"
 infoln "Joining org1 peer to the channel..."
 joinChannel 0 1
 joinChannel 1 1
-infoln "Joining org2 peer to the channel..."
-joinChannel 0 2
+# infoln "Joining org2 peer to the channel..."
+# joinChannel 0 2
 
 ## Set the anchor peers for each org in the channel
 infoln "Setting anchor peer for org1..."
 setAnchorPeer 1
-infoln "Setting anchor peer for org2..."
-setAnchorPeer 2
+# infoln "Setting anchor peer for org2..."
+# setAnchorPeer 2
 
 successln "Channel '$CHANNEL_NAME' joined"
