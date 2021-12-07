@@ -64,3 +64,7 @@ You can install & deploy a chaincode to the channel with `./network.sh deployCC`
 You should specify name, language, and path of the chaincode.
 `./network.sh deployCC -c kingworm_channel -ccn timo_chaincode -ccl typescript -ccv 1.0.0 -ccp ../../timo-chaincode/`
 You can get more details with `./nework.sh deployCC --help`.
+
+
+## License
+As Mentioned, This Project source code files are based on fabric-samples project, which is maintained by Hyperledger Community.
