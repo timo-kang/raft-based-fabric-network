@@ -12,6 +12,7 @@ organizations:
     mspid: Org${ORG}MSP
     peers:
     - peer0.org${ORG}.example.com
+    - peer1.org${ORG}.example.com
     certificateAuthorities:
     - ca.org${ORG}.example.com
 peers:
