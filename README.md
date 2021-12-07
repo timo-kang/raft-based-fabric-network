@@ -1,5 +1,9 @@
 # fabric-network ( HLF v2.3.3 )
 This Repositories are based on [fabric-samples](https://github.com/hyperledger/fabric-samples), created to help to build a raft-based-network easily.
+Since this is test network, You should consider the following comments if you are going to use under Production Enviroment.
+* The entire network is composed with docker node.
+* You should update governance rules.
+
 ## Objective
 3 Org, 3 CA
 Org 1 has 2 peers, Org 2 has 1 peer node.
