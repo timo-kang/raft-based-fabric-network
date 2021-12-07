@@ -198,6 +198,7 @@ checkCommitReadiness() {
 # commitChaincodeDefinition VERSION PEER ORG (PEER ORG)...
 commitChaincodeDefinition() {
   parsePeerConnectionParametersWithPairArgs $@
+  # parsePeerConnectionParameters $@
   res=$?
   verifyResult $res "Invoke transaction failed on channel '$CHANNEL_NAME' due to uneven number of peer and org parameters "
 
@@ -292,18 +293,20 @@ chaincodeQuery() {
 ## package the chaincode
 packageChaincode
 
-## Install chaincode on all peers
+## Install chaincode on peers on each org
 infoln "Installing chaincode on peers in org1..."
 installChaincode 0 1
-installChaincode 1 1
+# installChaincode 1 1
 infoln "Install chaincode on peer0.org2..."
 installChaincode 0 2
 
 ## query whether the chaincode is installed
 queryInstalled 0 1
 queryInstalled 1 1
+queryInstalled 0 2
 
-## approve the definition for org1 (for anchor peer)
+## [This Approval needs on each organization ]
+## approve the definition for org1
 approveForMyOrg 0 1
 
 ## check whether the chaincode definition is ready to be committed
@@ -312,7 +315,7 @@ checkCommitReadiness 0 1 "\"Org1MSP\": true" "\"Org2MSP\": false"
 checkCommitReadiness 1 1 "\"Org1MSP\": true" "\"Org2MSP\": false"
 checkCommitReadiness 0 2 "\"Org1MSP\": true" "\"Org2MSP\": false"
 
-## now approve also for org2 (for anchor peer)
+## now approve also for org2
 approveForMyOrg 0 2
 
 ## check whether the chaincode definition is ready to be committed
@@ -321,7 +324,8 @@ checkCommitReadiness 0 1 "\"Org1MSP\": true" "\"Org2MSP\": true"
 checkCommitReadiness 1 1 "\"Org1MSP\": true" "\"Org2MSP\": true"
 checkCommitReadiness 0 2 "\"Org1MSP\": true" "\"Org2MSP\": true"
 
-## now that we know for sure both orgs have approved, commit the definition
+## now that we know for sure both [Orgs] have approved, commit the definition
+## you don't have to commit cc def with every peer nodes
 commitChaincodeDefinition 0 1 0 2
 
 ## query on both orgs to see that the definition committed successfully
